@@ -23,7 +23,7 @@ class FyersAuth:
         # Monkeypatch requests to include User-Agent
         self._apply_patches()
 
-        self.client_id = settings.FYERS_APP_ID
+        self.client_id = settings.FYERS_CLIENT_ID
         self.secret_key = settings.FYERS_SECRET_KEY
         self.redirect_uri = settings.FYERS_REDIRECT_URI
         self.response_type = "code" 

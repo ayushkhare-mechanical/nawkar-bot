@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,7 +35,7 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            background-image: 
+            background-image:
                 radial-gradient(circle at 20% 20%, rgba(79, 70, 229, 0.15) 0%, transparent 40%),
                 radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 40%);
         }
@@ -57,8 +58,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         header {
@@ -73,6 +81,7 @@
             font-weight: 700;
             background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             display: flex;
             align-items: center;
@@ -118,9 +127,17 @@
         }
 
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
         }
 
         .main-grid {
@@ -227,16 +244,75 @@
         }
 
         @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         @media (max-width: 768px) {
-            .main-grid { grid-template-columns: 1fr; }
-            .dashboard { padding: 24px; }
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard {
+                padding: 24px;
+            }
+        }
+
+        .manual-token-section {
+            margin-top: 40px;
+            padding-top: 32px;
+            border-top: 1px solid var(--glass-border);
+            animation: fadeIn 1s ease-out;
+        }
+
+        .input-group {
+            margin-top: 16px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .input-field {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .text-active {
+            color: var(--secondary);
+        }
+
+        .text-inactive {
+            color: #ef4444;
         }
     </style>
 </head>
+
 <body>
     <div id="successAlert" class="alert">
         ✅ Successfully connected to Fyers!
@@ -259,9 +335,10 @@
                 <main>
                     <h1 class="hero-title">Welcome back!</h1>
                     <p class="hero-desc">
-                        Nawkar is ready to execute your intraday strategies. 
+                        Nawkar is ready to execute your intraday strategies.
                         {% if not authenticated %}
-                        To get started, you need to authenticate with your Fyers account to enable real-time trading and data fetch.
+                        To get started, you need to authenticate with your Fyers account to enable real-time trading and
+                        data fetch.
                         {% else %}
                         Your account is linked and ready. You can now start the strategy engine.
                         {% endif %}
@@ -275,13 +352,29 @@
                         {% endif %}
                         <a href="#" class="btn btn-outline">Bot Settings</a>
                     </div>
+
+                    {% if not authenticated %}
+                    <div class="manual-token-section">
+                        <h3 class="section-subtitle">Alternative: Manual Access Token</h3>
+                        <p class="hero-desc" style="font-size: 14px; margin-bottom: 0; margin-top: 8px;">
+                            If the automated login is blocked, you can paste your access token manually here.
+                        </p>
+                        <form action="/auth/manual" method="POST" class="input-group">
+                            <input type="text" name="access_token" class="input-field"
+                                placeholder="Paste the entire Fyers callback URL or Access Token here..." required>
+                            <button type="submit" class="btn btn-primary" style="padding: 12px 24px;">Save
+                                Token</button>
+                        </form>
+                    </div>
+                    {% endif %}
                 </main>
 
                 <aside>
                     <div class="card">
                         <div class="info-item">
                             <div class="stat-label">Session Status</div>
-                            <div class="stat-value" style="font-size: 14px; color: {% if authenticated %}var(--secondary){% else %}#ef4444{% endif %};">
+                            <div class="stat-value {% if authenticated %}text-active{% else %}text-inactive{% endif %}"
+                                style="font-size: 14px;">
                                 {% if authenticated %}Active{% else %}Inactive{% endif %}
                             </div>
                         </div>
@@ -292,7 +385,8 @@
                         {% if authenticated %}
                         <div class="info-item">
                             <div class="stat-label">Token ID</div>
-                            <div class="stat-value" style="font-size: 12px; font-family: monospace;">{{ token_preview }}</div>
+                            <div class="stat-value" style="font-size: 12px; font-family: monospace;">{{ token_preview }}
+                            </div>
                         </div>
                         {% endif %}
                         <div style="margin-top: 24px;">
@@ -315,10 +409,11 @@
                 alert.style.opacity = '0';
                 setTimeout(() => alert.style.display = 'none', 300);
             }, 5000);
-            
+
             // Clean up URL
             window.history.replaceState({}, document.title, "/");
         }
     </script>
 </body>
+
 </html>
