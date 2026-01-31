@@ -12,7 +12,7 @@ templates = Jinja2Templates(directory="app/templates")
 # Include routes
 app.include_router(auth.router)
 
-@app.get("/")
+@app.api_route("/", methods=["GET", "HEAD"])
 async def index(request: Request):
     # Check if we have a saved token
     from app.core.fyers_handler import fyers_auth

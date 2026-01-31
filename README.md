@@ -92,6 +92,20 @@ python app/core/data_streamer.py
 
 ## 📂 Project Structure
 - `app/main.py`: Entry point for the web dashboard.
-- `app/core/fyers_handler.py`: Handles Fyers API authentication and session.
 - `app/strategies/`: Contains logic for the 1-minute trading strategy.
 - `must-read-files/`: Detailed documentation and utility scripts.
+
+---
+
+## 🛠️ Troubleshooting Render & Fyers Blocks
+
+### 1. "405 Method Not Allowed" in Logs
+Render uses `HEAD` requests for health checks. If you see this error, ensure your root route (`/`) supports the `HEAD` method. (This has been fixed in `app/main.py`).
+
+### 2. "You have been blocked" by fyers.in
+Fyers uses Cloudflare to protect against bots. Since Render uses data center IP ranges, they are sometimes blocked.
+
+**Solutions:**
+- **Use a Proxy**: Configure a residential proxy provider in your code when making requests to Fyers.
+- **User-Agent Spoofing**: Ensure your HTTP requests include a realistic browser `User-Agent` header.
+- **Dedicated IP**: If the problem persists, you may need a server with a dedicated, non-data-center IP address.
