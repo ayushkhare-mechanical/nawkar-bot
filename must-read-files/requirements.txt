@@ -1,0 +1,39 @@
+# ==============================================================================
+# FYERS 1Min Strategy - Python Dependencies
+# ==============================================================================
+
+# Core Dependencies
+python-dotenv==1.0.0        # Load environment variables from .env file
+requests==2.31.0            # HTTP library for API calls
+
+# Optional: Data Analysis and Processing
+# Uncomment these if you need data analysis features
+# pandas==2.1.0             # Data manipulation and analysis
+# numpy==1.24.3             # Numerical computing
+
+# Optional: Database Support
+# Uncomment if you want to use database for trade logging
+# sqlalchemy==2.0.20        # SQL toolkit and ORM
+
+# Optional: Enhanced Logging
+# Uncomment for colored console logging
+# colorlog==6.7.0           # Colored logging output
+
+# Optional: Web Dashboard
+# Uncomment if you want to run the web dashboard
+# flask==3.0.0              # Web framework
+# flask-cors==4.0.0         # CORS support for Flask
+# flask-socketio==5.3.4     # WebSocket support
+
+# Optional: Notifications
+# Uncomment for notification support
+# python-telegram-bot==20.5 # Telegram bot integration
+
+# Utilities
+python-dateutil==2.8.2      # Date/time utilities
+pytz==2023.3                # Timezone support
+
+# Optional: Testing
+# Uncomment for testing support
+# pytest==7.4.0             # Testing framework
+# pytest-asyncio==0.21.1    # Async testing support

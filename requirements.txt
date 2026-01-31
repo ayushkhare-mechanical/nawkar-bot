@@ -7,3 +7,10 @@ python-dotenv
 websockets
 requests
 pydantic
+pydantic-settings
+jinja2
+python-multipart
+pytest
+flake8
+pytest-asyncio
+httpx

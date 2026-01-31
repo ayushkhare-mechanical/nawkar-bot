@@ -1,0 +1,151 @@
+# ==============================================================================
+# FYERS 1Min Strategy - Git Ignore File
+# ==============================================================================
+
+# Environment Variables - NEVER COMMIT THESE!
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.staging
+
+# Authentication Tokens and Secrets
+.fyers_tokens.json
+*.key
+*.pem
+*.p12
+secrets/
+credentials/
+auth_tokens/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Database Files
+*.db
+*.sqlite
+*.sqlite3
+data/
+backups/
+*.db-journal
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# Reports and Outputs
+reports/
+outputs/
+*.csv
+*.xlsx
+*.xls
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*~
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre
+.pyre/
+
+# pytype
+.pytype/
+
+# Compiled files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+*.rej
+*.tmp
+
+# Archives
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# OS Files
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+# Temporary files
+temp/
+tmp/
+*.tmp
