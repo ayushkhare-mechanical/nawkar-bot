@@ -93,10 +93,10 @@ Since you are running locally but the redirect URI points to your production ser
 ### 1. Verify Authentication
 Check the dashboard at `http://localhost:8000`. It should show **Connected** and display a preview of your Token ID.
 
-### 2. Test Strategy Logic
-You can run a scan to see which stocks are currently eligible for the 1-minute strategy:
+### 2. Check Account Details
+Run this command to verify that the API can successfully fetch your profile and funds:
 ```bash
-python app/scripts/scan_stocks.py
+python app/scripts/check_balance.py
 ```
 
 ### 3. Monitor Data Stream
