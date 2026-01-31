@@ -9,8 +9,23 @@ This guide provides instructions on how to run and test the Nawkar Trading Bot a
 - Fyers API Credentials (App ID, Secret Key)
 
 ### 2. Environment Setup
-The bot requires a `.env` file in the root directory. Use the provided template:
 
+#### Create a Virtual Environment
+```bash
+python -m venv venv
+```
+
+#### Activate the Virtual Environment
+Depending on your operating system, use the corresponding command:
+
+| OS | Command |
+| :--- | :--- |
+| **Windows (PowerShell)** | `.\venv\Scripts\Activate.ps1` |
+| **Windows (CMD)** | `.\venv\Scripts\activate.bat` |
+| **macOS / Linux** | `source venv/bin/activate` |
+
+#### Configure Environment Variables
+The bot requires a `.env` file in the root directory. Use the provided template:
 ```env
 FYERS_CLIENT_ID="Your_Client_ID"
 FYERS_APP_ID="Your_App_ID"

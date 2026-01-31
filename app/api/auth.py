@@ -49,7 +49,7 @@ async def manual_token(request: Request):
             # Check for access_token in URL
             if "access_token" in params:
                 access_token = params["access_token"][0]
-            # Check for auth_code in URL (in case SDK exchange is still possible/wanted)
+            # Check for auth_code in URL
             elif "auth_code" in params:
                 auth_code = params["auth_code"][0]
                 access_token = fyers_auth.generate_access_token(auth_code)
@@ -58,9 +58,19 @@ async def manual_token(request: Request):
         if not access_token:
             access_token = input_data
 
+        # VALIDATION: Check if the token is actually valid with Fyers
+        if not fyers_auth.validate_token(access_token):
+            return RedirectResponse(url="/?status=error&message=Invalid or Expired Fyers Token", status_code=303)
+
         # Save token
         fyers_auth.save_access_token(access_token)
         return RedirectResponse(url="/?status=success", status_code=303)
         
     except Exception as e:
         return RedirectResponse(url=f"/?status=error&message={str(e)}", status_code=303)
+
+@router.get("/logout")
+async def logout():
+    """Clear the Fyers session"""
+    fyers_auth.logout()
+    return RedirectResponse(url="/?status=success&message=Logged out successfully")

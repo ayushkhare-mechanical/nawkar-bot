@@ -12,6 +12,11 @@ templates = Jinja2Templates(directory="app/templates")
 # Include routes
 app.include_router(auth.router)
 
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    from fastapi.responses import Response
+    return Response(content=b"", media_type="image/x-icon")
+
 @app.api_route("/", methods=["GET", "HEAD"])
 async def index(request: Request):
     # Check if we have a saved token

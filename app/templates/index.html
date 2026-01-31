@@ -314,8 +314,8 @@
 </head>
 
 <body>
-    <div id="successAlert" class="alert">
-        ✅ Successfully connected to Fyers!
+    <div id="statusAlert" class="alert">
+        <span id="alertMessage">✅ Successfully connected to Fyers!</span>
     </div>
 
     <div class="container">
@@ -346,9 +346,12 @@
 
                     <div style="display: flex; gap: 16px;">
                         {% if not authenticated %}
-                        <a href="/auth/login" class="btn btn-primary">Connect Fyers Account</a>
+                        <a href="/auth/login" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Connect
+                            Fyers Account</a>
                         {% else %}
                         <button class="btn btn-primary">Start Strategy Monitor</button>
+                        <a href="/auth/logout" class="btn btn-outline"
+                            style="border-color: #ef4444; color: #ef4444;">Logout Session</a>
                         {% endif %}
                         <a href="#" class="btn btn-outline">Bot Settings</a>
                     </div>
@@ -402,13 +405,26 @@
     <script>
         // Check for success/error status in URL
         const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('status') === 'success') {
-            const alert = document.getElementById('successAlert');
+        const status = urlParams.get('status');
+        const message = urlParams.get('message');
+
+        if (status) {
+            const alert = document.getElementById('statusAlert');
+            const alertMsg = document.getElementById('alertMessage');
+
+            if (status === 'success') {
+                alert.style.background = 'rgba(16, 185, 129, 0.9)';
+                alertMsg.innerText = '✅ Successfully connected to Fyers!';
+            } else {
+                alert.style.background = 'rgba(239, 68, 68, 0.9)';
+                alertMsg.innerText = '❌ Error: ' + (message || 'Authentication failed');
+            }
+
             alert.style.display = 'block';
             setTimeout(() => {
                 alert.style.opacity = '0';
                 setTimeout(() => alert.style.display = 'none', 300);
-            }, 5000);
+            }, 8000);
 
             // Clean up URL
             window.history.replaceState({}, document.title, "/");
