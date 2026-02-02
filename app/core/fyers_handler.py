@@ -153,4 +153,21 @@ class FyersAuth:
             print(f"Token validation failed: {str(e)}")
             return False
 
+    def get_user_profile(self, token: str) -> Optional[Dict]:
+        """Fetch user profile from Fyers"""
+        if not token:
+            return None
+            
+        try:
+            from fyers_apiv3.fyersModel import FyersModel
+            fyers = FyersModel(client_id=self.client_id, token=token, is_async=False)
+            response = fyers.get_profile()
+            
+            if response.get('s') == 'ok':
+                return response.get('data')
+            return None
+        except Exception as e:
+            print(f"Error fetching profile: {str(e)}")
+            return None
+
 fyers_auth = FyersAuth()

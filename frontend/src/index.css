@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Poppins', sans-serif;
+    @apply bg-scandi-bg text-scandi-text dark:bg-scandi-dark dark:text-gray-100;
+  }
+}
+
+.btn-pill {
+    @apply rounded-pill px-6 py-2 transition-all duration-300 hover:shadow-lg active:scale-95 text-sm font-medium;
+}

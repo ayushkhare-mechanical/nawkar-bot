@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nawkar Bot | Strategy Monitor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --primary: #4f46e5;
+            --primary-glow: rgba(79, 70, 229, 0.4);
+            --secondary: #10b981;
+            --bg-deep: #0f172a;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --card-bg: rgba(30, 41, 59, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image:
+                radial-gradient(circle at 10% 10%, rgba(79, 70, 229, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
+        }
+
+        .navbar {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-dim);
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            width: 100%;
+            flex: 1;
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .page-desc {
+            color: var(--text-dim);
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .grid-section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::after {
+            content: '';
+            height: 1px;
+            flex: 1;
+            background: var(--glass-border);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 32px;
+            transition: transform 0.3s, border-color 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: white;
+        }
+
+        .card-desc {
+            font-size: 14px;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--secondary);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+        }
+
+        .badge-coming-soon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            color: var(--text-dim);
+        }
+
+        .user-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 16px;
+            border-radius: 100px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .user-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .opacity-50 {
+            opacity: 0.5;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.5;
+            }
+        }
+
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--secondary);
+            font-size: 12px;
+            font-weight: 600;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 4px 12px;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">NAWKAR BOT</div>
+        <div class="nav-links">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/monitor" class="nav-link active">Monitor</a>
+            <a href="#" class="nav-link">Strategies</a>
+            <a href="#" class="nav-link">Settings</a>
+        </div>
+        {% if user_profile %}
+        <div class="user-pill">
+            <div class="user-avatar">{{ user_profile.name[0] }}</div>
+            <span style="font-size: 14px;">{{ user_profile.fy_id }}</span>
+        </div>
+        {% endif %}
+    </nav>
+
+    <div class="container">
+        <header class="page-header">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <h1 class="page-title">Strategy Monitor</h1>
+                    <p class="page-desc">Real-time supervision of active trading algorithms and market connectivity.</p>
+                </div>
+                <div class="live-indicator">
+                    <div class="status-dot" style="animation: pulse 2s infinite;"></div>
+                    SYSTEM ACTIVE
+                </div>
+            </div>
+        </header>
+
+        <section class="grid-section">
+            <div class="section-title">Operational Features</div>
+            <div class="features-grid">
+                <!-- Connected Status -->
+                <div class="card">
+                    <div class="card-icon" style="color: var(--secondary);">⚡</div>
+                    <h3 class="card-title">Fyers Connectivity</h3>
+                    <p class="card-desc">Active session with Fyers API v3. Token validation and refresh logic
+                        operational.</p>
+                </div>
+
+                <!-- User Profile -->
+                <div class="card">
+                    <div class="card-icon" style="color: #60a5fa;">👤</div>
+                    <h3 class="card-title">Profile Management</h3>
+                    <p class="card-desc">Secure retrieval of user profile, funds, and account limits (Basic info display
+                        active).</p>
+                </div>
+
+                <!-- Token Logic -->
+                <div class="card">
+                    <div class="card-icon" style="color: #f472b6;">🔐</div>
+                    <h3 class="card-title">Token Automation</h3>
+                    <p class="card-desc">Automatic saving, loading, and validation of access tokens for persistent
+                        sessions.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid-section">
+            <div class="section-title">Coming Soon</div>
+            <div class="features-grid">
+                <!-- Backtesting -->
+                <div class="card opacity-50">
+                    <div class="badge-coming-soon">Development</div>
+                    <div class="card-icon">📈</div>
+                    <h3 class="card-title">Backtesting Engine</h3>
+                    <p class="card-desc">Simulate strategies against historical data to validate performance metrics
+                        before going live.</p>
+                </div>
+
+                <!-- AI Analysis -->
+                <div class="card opacity-50">
+                    <div class="badge-coming-soon">Planned</div>
+                    <div class="card-icon">🧠</div>
+                    <h3 class="card-title">AI Signal Analysis</h3>
+                    <p class="card-desc">Deep learning integration for smarter entry/exit signals based on multi-factor
+                        analysis.</p>
+                </div>
+
+                <!-- Portfolio -->
+                <div class="card opacity-50">
+                    <div class="badge-coming-soon">Planned</div>
+                    <div class="card-icon">💼</div>
+                    <h3 class="card-title">Portfolio Optimizer</h3>
+                    <p class="card-desc">Risk-parity allocation and dynamic position sizing to maximize Sharpe ratio.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>
