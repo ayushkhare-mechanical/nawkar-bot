@@ -1,10 +1,39 @@
+# ENV & Secrets
+.env
+.fyers_tokens.json
+
+# Python
 venv/
 __pycache__/
 *.pyc
-.env
+*.pyo
+*.pyd
+
+# Node/Frontend
+node_modules/
+dist/
+.next/
+out/
+
+# Database & Logs
+logs/
+*.db
+*.sqlite
+*.log
+trade_history.json
+
+# System
 .DS_Store
 .vscode/
-must-read-files/
-*.json
-*.log
-*.db
+thumbs.db
+
+# Agent & Skill Artifacts
+.agent/
+.agents/
+.adal/
+.crush/
+.gemini/
+.github/
+.goose/
+.opencode/
+skills/

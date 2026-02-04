@@ -1,0 +1,53 @@
+{
+    "name": "Moving Average Crossover",
+    "symbol": "NSE:SBIN-EQ",
+    "timeframe": "1m",
+    "indicators": [
+        {
+            "id": "ema_fast",
+            "type": "EMA",
+            "params": {
+                "period": 9
+            }
+        },
+        {
+            "id": "ema_slow",
+            "type": "EMA",
+            "params": {
+                "period": 21
+            }
+        }
+    ],
+    "entry_conditions": {
+        "and": [
+            {
+                "operator": ">",
+                "left": "ema_fast",
+                "right": "ema_slow"
+            },
+            {
+                "operator": "cross_over",
+                "left": "ema_fast",
+                "right": "ema_slow"
+            }
+        ]
+    },
+    "exit_conditions": {
+        "or": [
+            {
+                "operator": "<",
+                "left": "ema_fast",
+                "right": "ema_slow"
+            },
+            {
+                "operator": "cross_under",
+                "left": "ema_fast",
+                "right": "ema_slow"
+            }
+        ]
+    },
+    "risk_management": {
+        "stop_loss_perc": 1.5,
+        "target_perc": 3.0
+    }
+}

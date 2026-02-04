@@ -170,4 +170,94 @@ class FyersAuth:
             print(f"Error fetching profile: {str(e)}")
             return None
 
+    def get_funds(self, token: str) -> Optional[Dict]:
+        """Fetch fund details from Fyers"""
+        if not token:
+            return None
+            
+        try:
+            from fyers_apiv3.fyersModel import FyersModel
+            fyers = FyersModel(client_id=self.client_id, token=token, is_async=False)
+            response = fyers.funds()
+            
+            if response.get('s') == 'ok':
+                return response
+            return None
+        except Exception as e:
+            print(f"Error fetching funds: {str(e)}")
+            return None
+
+    def get_holdings(self, token: str) -> Optional[Dict]:
+        """Fetch holdings from Fyers"""
+        if not token:
+            return None
+        try:
+            from fyers_apiv3.fyersModel import FyersModel
+            fyers = FyersModel(client_id=self.client_id, token=token, is_async=False)
+            response = fyers.holdings()
+            if response.get('s') == 'ok':
+                return response
+            return response # Return even if not ok to see error message in UI if needed
+        except Exception as e:
+            print(f"Error fetching holdings: {str(e)}")
+            return None
+
+    def get_positions(self, token: str) -> Optional[Dict]:
+        """Fetch positions from Fyers"""
+        if not token:
+            return None
+        try:
+            from fyers_apiv3.fyersModel import FyersModel
+            fyers = FyersModel(client_id=self.client_id, token=token, is_async=False)
+            response = fyers.positions()
+            if response.get('s') == 'ok':
+                return response
+            return response
+        except Exception as e:
+            print(f"Error fetching positions: {str(e)}")
+            return None
+
+    def get_orders(self, token: str) -> Optional[Dict]:
+        """Fetch order book from Fyers"""
+        if not token:
+            return None
+        try:
+            from fyers_apiv3.fyersModel import FyersModel
+            fyers = FyersModel(client_id=self.client_id, token=token, is_async=False)
+            response = fyers.orderbook()
+            if response.get('s') == 'ok':
+                return response
+            return response
+        except Exception as e:
+            print(f"Error fetching orders: {str(e)}")
+            return None
+
+    def place_order(self, token: str, data: Dict) -> Dict:
+        """Place an order with Fyers"""
+        try:
+            from fyers_apiv3.fyersModel import FyersModel
+            fyers = FyersModel(client_id=self.client_id, token=token, is_async=False)
+            return fyers.place_order(data=data)
+        except Exception as e:
+            print(f"Error placing order: {str(e)}")
+            return {"s": "error", "message": str(e)}
+
+    def get_history_data(self, token: str, symbol: str, resolution: str, range_from: str, range_to: str) -> Optional[Dict]:
+        """Fetch historical candle data from Fyers"""
+        try:
+            from fyers_apiv3.fyersModel import FyersModel
+            fyers = FyersModel(client_id=self.client_id, token=token, is_async=False)
+            data = {
+                "symbol": symbol,
+                "resolution": resolution,
+                "date_format": "1", # yyyy-mm-dd
+                "range_from": range_from,
+                "range_to": range_to,
+                "cont_flag": "1"
+            }
+            return fyers.history(data=data)
+        except Exception as e:
+            print(f"Error fetching historical data: {str(e)}")
+            return None
+
 fyers_auth = FyersAuth()
