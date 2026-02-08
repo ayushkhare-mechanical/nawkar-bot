@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Layout } from '../Layout';
-import { ScatterChart, Scatter, XAxis as ScatterXAxis, YAxis as ScatterYAxis, Tooltip as ScatterTooltip, ResponsiveContainer as ScatterResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { AnalyticsDashboard } from '../components/analytics/AnalyticsDashboard';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 interface MonitorData {
     authenticated: boolean;
     user_profile?: {

@@ -4,31 +4,32 @@ import type { AnalyticsTrade } from '../types';
 
 interface EquityChartProps {
     trades: AnalyticsTrade[];
-    initialCapital: number;
+    initialCapital?: number;
 }
 
-export const EquityChart: React.FC<EquityChartProps> = ({ trades, initialCapital }) => {
-    // Transform trades into equity data
+export const EquityChart: React.FC<EquityChartProps> = ({ trades, initialCapital = 100000 }) => {
+    // Generate equity curve data points
     const data = React.useMemo(() => {
         let currentEquity = initialCapital;
-        const points = trades.map(t => {
-            currentEquity += t.pnl;
-            return {
-                time: t.exit_time,
-                equity: currentEquity,
-                pnl: t.pnl
-            };
-        });
+        const points = [{ name: 'Start', equity: initialCapital, time: '' }];
 
-        // Add start point
-        return [{ time: 'Start', equity: initialCapital, pnl: 0 }, ...points];
+        trades.forEach((t) => {
+            currentEquity += t.pnl;
+            points.push({
+                name: `Trade #${t.id}`,
+                equity: currentEquity,
+                time: t.exit_time
+            });
+        });
+        return points;
     }, [trades, initialCapital]);
 
-    if (trades.length === 0) return null;
+    const minEquity = Math.min(...data.map(d => d.equity));
+    const maxEquity = Math.max(...data.map(d => d.equity));
+    const domainPadding = (maxEquity - minEquity) * 0.1;
 
     return (
-        <div className="bg-white dark:bg-white/5 rounded-3xl border border-gray-200 dark:border-gray-800 p-6 h-80">
-            <h3 className="text-sm font-bold uppercase text-gray-500 mb-4">Equity Curve</h3>
+        <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={data}>
                     <defs>
@@ -38,8 +39,12 @@ export const EquityChart: React.FC<EquityChartProps> = ({ trades, initialCapital
                         </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" opacity={0.1} />
-                    <XAxis dataKey="time" hide />
+                    <XAxis
+                        dataKey="name"
+                        hide
+                    />
                     <YAxis
+                        domain={[minEquity - domainPadding, maxEquity + domainPadding]}
                         tick={{ fontSize: 10 }}
                         width={60}
                         axisLine={false}
@@ -49,10 +54,18 @@ export const EquityChart: React.FC<EquityChartProps> = ({ trades, initialCapital
                     <Tooltip
                         contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px', color: '#fff' }}
                         itemStyle={{ color: '#fff' }}
-                        formatter={(val: number) => [`₹${val.toLocaleString()}`, 'Equity']}
+                        formatter={(val: any) => [`₹${Number(val).toFixed(2)}`, 'Equity']}
                         labelStyle={{ display: 'none' }}
                     />
-                    <Area type="monotone" dataKey="equity" stroke="#6366f1" fillOpacity={1} fill="url(#colorEquity)" strokeWidth={2} />
+                    <Area
+                        type="monotone"
+                        dataKey="equity"
+                        stroke="#6366f1"
+                        fillOpacity={1}
+                        fill="url(#colorEquity)"
+                        strokeWidth={2}
+                        animationDuration={500}
+                    />
                 </AreaChart>
             </ResponsiveContainer>
         </div>
