@@ -86,17 +86,46 @@ class BacktestEngine:
         # Summary Metrics
         total_pnl = sum(t['pnl'] for t in trades)
         winners = [t for t in trades if t['pnl'] > 0]
+        losers = [t for t in trades if t['pnl'] <= 0]
         win_rate = (len(winners) / len(trades) * 100) if trades else 0
         
+        # Advanced Metrics
+        gross_profit = sum(t['pnl'] for t in winners)
+        gross_loss = abs(sum(t['pnl'] for t in losers)) if losers else 0
+        profit_factor = (gross_profit / gross_loss) if gross_loss > 0 else 99.99
+        
+        # Equity Curve & Drawdown
+        equity_curve = []
+        current_equity = 0
+        peak_equity = 0
+        max_drawdown = 0
+        
+        for t in trades:
+            current_equity += t['pnl']
+            equity_curve.append({"time": t['exit_time'], "equity": current_equity})
+            
+            if current_equity > peak_equity:
+                peak_equity = current_equity
+            
+            dd = peak_equity - current_equity
+            if dd > max_drawdown:
+                max_drawdown = dd
+                
         return {
             "summary": {
                 "strategy_name": backtest_config['name'],
                 "symbol": backtest_config['symbol'],
                 "total_pnl": total_pnl,
                 "win_rate": win_rate,
-                "total_trades": len(trades)
+                "total_trades": len(trades),
+                "profit_factor": profit_factor,
+                "max_drawdown": max_drawdown,
+                "avg_trade": total_pnl / len(trades) if trades else 0,
+                "gross_profit": gross_profit,
+                "gross_loss": gross_loss
             },
             "trades": trades,
+            "equity_curve": equity_curve,
             "parameters": overrides or {}
         }
 

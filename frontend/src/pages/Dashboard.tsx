@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Layout } from '../Layout';
+import { ScatterChart, Scatter, XAxis as ScatterXAxis, YAxis as ScatterYAxis, Tooltip as ScatterTooltip, ResponsiveContainer as ScatterResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AnalyticsDashboard } from '../components/analytics/AnalyticsDashboard';
 interface MonitorData {
     authenticated: boolean;
     user_profile?: {
@@ -345,6 +347,9 @@ const BacktestPlayground = ({ strategies }: { strategies: Strategy[] }) => {
         fetch('/api/v1/monitor/backtest/history').then(res => res.json()).then(data => setBtHistory(data.history || []));
     }, []);
 
+    const [startDate, setStartDate] = useState(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
+    const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
+
     const runBacktest = async () => {
         if (!selectedStrat) return;
         setRunning(true);
@@ -355,7 +360,9 @@ const BacktestPlayground = ({ strategies }: { strategies: Strategy[] }) => {
                 body: JSON.stringify({
                     strategy_name: selectedStrat.name,
                     symbol: symbol,
-                    parameters: overrides
+                    parameters: overrides,
+                    from_date: startDate,
+                    to_date: endDate
                 })
             });
             const data = await res.json();
@@ -428,70 +435,37 @@ const BacktestPlayground = ({ strategies }: { strategies: Strategy[] }) => {
                         </div>
                     ))}
 
-                    <button
-                        onClick={runBacktest}
-                        disabled={running}
-                        className={`w-full py-4 rounded-2xl font-bold text-white transition-all ${running ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-500/20'}`}
-                    >
-                        {running ? 'Simulating Engine...' : 'Run Backtest'}
-                    </button>
+                    <div className="space-y-4">
+                        <label className="text-xs font-bold uppercase text-scandi-muted">Date Range</label>
+                        <div className="grid grid-cols-2 gap-2">
+                            <input
+                                type="date"
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                                className="w-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                            />
+                            <input
+                                type="date"
+                                value={endDate}
+                                onChange={(e) => setEndDate(e.target.value)}
+                                className="w-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div className="lg:col-span-2 space-y-8">
-                {results?.summary ? (
-                    <section className="animate-in zoom-in-95 duration-500">
-                        <div className="grid grid-cols-3 gap-4 mb-6">
-                            <div className="bg-indigo-600 p-6 rounded-3xl text-white relative">
-                                <p className="text-[10px] font-bold uppercase opacity-60">Total PnL</p>
-                                <p className="text-2xl font-bold">₹{results.summary.total_pnl.toFixed(2)}</p>
-                                <a
-                                    href={`/api/v1/monitor/backtest/export/${results.summary.id || 'last'}`}
-                                    className="absolute top-4 right-4 bg-white/20 hover:bg-white/30 p-2 rounded-lg text-[10px] font-bold"
-                                >
-                                    GET CSV
-                                </a>
-                            </div>
-                            <div className="bg-white dark:bg-white/5 p-6 rounded-3xl border border-gray-200 dark:border-gray-800">
-                                <p className="text-[10px] font-bold uppercase text-scandi-muted">Win Rate</p>
-                                <p className="text-2xl font-bold">{results.summary.win_rate.toFixed(1)}%</p>
-                            </div>
-                            <div className="bg-white dark:bg-white/5 p-6 rounded-3xl border border-gray-200 dark:border-gray-800">
-                                <p className="text-[10px] font-bold uppercase text-scandi-muted">Trades</p>
-                                <p className="text-2xl font-bold">{results.summary.total_trades}</p>
-                            </div>
-                        </div>
+            <button
+                onClick={runBacktest}
+                disabled={running}
+                className={`w-full py-4 rounded-2xl font-bold text-white transition-all ${running ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-500/20'}`}
+            >
+                {running ? 'Simulating Engine...' : 'Run Backtest'}
+            </button>
+            <div className="lg:col-span-2">
+                <AnalyticsDashboard rawTrades={results?.trades || []} />
 
-                        <div className="bg-white dark:bg-white/5 rounded-3xl border border-gray-200 dark:border-gray-800 overflow-hidden">
-                            <table className="w-full text-left">
-                                <thead className="bg-gray-50 dark:bg-white/5 text-[10px] font-bold text-scandi-muted uppercase">
-                                    <tr>
-                                        <th className="px-6 py-4">Entry</th>
-                                        <th className="px-6 py-4">Exit Reason</th>
-                                        <th className="px-6 py-4">PnL</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-100 dark:divide-white/5">
-                                    {results.trades.map((t: any, i: number) => (
-                                        <tr key={i} className="text-sm">
-                                            <td className="px-6 py-4 font-bold">₹{t.entry_price.toFixed(2)}</td>
-                                            <td className="px-6 py-4 text-xs italic">{t.exit_reason}</td>
-                                            <td className={`px-6 py-4 font-bold ${t.pnl >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                                                {t.pnl >= 0 ? '+' : ''}{t.pnl.toFixed(2)}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </section>
-                ) : (
-                    <div className="h-64 border-2 border-dashed border-gray-200 dark:border-white/10 rounded-3xl flex items-center justify-center text-scandi-muted italic">
-                        Configure your parameters and run a simulation to see results
-                    </div>
-                )}
-
-                <section>
+                <section className="mt-8">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-xl font-bold">Saved Research Logs</h2>
                         {btHistory.length > 0 && (
@@ -529,7 +503,11 @@ const BacktestPlayground = ({ strategies }: { strategies: Strategy[] }) => {
                                 </div>
                                 <div className="text-[10px] text-scandi-muted flex justify-between">
                                     <span>{run.symbol} • {run.win_rate.toFixed(0)}% WR</span>
-                                    <span>{new Date(run.timestamp).toLocaleDateString()}</span>
+                                    <p className="text-[10px] text-scandi-muted">
+                                        {new Date(run.timestamp).toLocaleString('en-IN', {
+                                            day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+                                        })}
+                                    </p>
                                 </div>
                             </div>
                         ))}

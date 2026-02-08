@@ -85,9 +85,9 @@ async def run_backtest(request: Request):
     if not token:
         raise HTTPException(status_code=401, detail="Authentication required for historical data")
         
-    # 2. Fetch Historical Data (Last 30 days)
-    to_date = datetime.now().strftime("%Y-%m-%d")
-    from_date = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
+    # 2. Fetch Historical Data
+    to_date = body.get('to_date') or datetime.now().strftime("%Y-%m-%d")
+    from_date = body.get('from_date') or (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
     
     # Map resolution (e.g. 1m -> 1, 1d -> 1D)
     res_map = {"1m": "1", "5m": "5", "15m": "15", "30m": "30", "1h": "60", "1d": "D"}
