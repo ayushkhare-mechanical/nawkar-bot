@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Layout } from '../Layout';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AnalyticsDashboard } from '../components/analytics/AnalyticsDashboard';
 interface MonitorData {
     authenticated: boolean;
     user_profile?: {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { WidgetState } from './types';
+import type { WidgetState } from './types';
 
 interface WidgetPanelProps {
     widgets: WidgetState;
